@@ -14,7 +14,7 @@ export class ProductStack extends cdk.Stack {
       "GetProductsListHandler",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
-        code: lambda.Code.fromAsset("lambda-functions"),
+        code: lambda.Code.fromAsset("lambda"),
         handler: "getProductsList.handler",
         environment: {
           MOCK_PRODUCTS: JSON.stringify(products),
@@ -22,22 +22,38 @@ export class ProductStack extends cdk.Stack {
       },
     );
 
+    const getProductByIdFunction = new lambda.Function(
+      this,
+      "GetProductByIdHandler",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        code: lambda.Code.fromAsset("lambda"),
+        handler: "getProductById.handler",
+        environment: {
+          MOCK_PRODUCTS: JSON.stringify(products),
+        },
+      },
+    );
 
-    const api = new apigateway.RestApi(this, "ProductsApi", {
-      restApiName: "Products Service",
-      description: "This service serves products",
+    const api = new apigateway.RestApi(this, "api", {
+      restApiName: "api Products",
+      description: "Ttt",
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
         allowMethods: apigateway.Cors.ALL_METHODS,
       },
     });
 
-    const productsResource = api.root.addResource("products");
-    productsResource.addMethod(
+    const resourceList = api.root.addResource("products");
+    resourceList.addMethod(
       "GET",
       new apigateway.LambdaIntegration(getProductsListFunction),
     );
 
-
+    const resourceById = resourceList.addResource("{id}");
+    resourceById.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(getProductByIdFunction),
+    );
   }
 }

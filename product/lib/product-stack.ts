@@ -8,7 +8,6 @@ export class ProductStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    
     const getProductsListFunction = new lambda.Function(
       this,
       "GetProductsListHandler",
@@ -17,9 +16,9 @@ export class ProductStack extends cdk.Stack {
         code: lambda.Code.fromAsset("lambda"),
         handler: "getProductsList.handler",
         environment: {
-          MOCK_PRODUCTS: JSON.stringify(products),
+          PRODUCTS_DATA: JSON.stringify(products),
         },
-      },
+      }
     );
 
     const getProductByIdFunction = new lambda.Function(
@@ -30,9 +29,9 @@ export class ProductStack extends cdk.Stack {
         code: lambda.Code.fromAsset("lambda"),
         handler: "getProductById.handler",
         environment: {
-          MOCK_PRODUCTS: JSON.stringify(products),
+          PRODUCTS_DATA: JSON.stringify(products),
         },
-      },
+      }
     );
 
     const api = new apigateway.RestApi(this, "api", {
@@ -47,13 +46,13 @@ export class ProductStack extends cdk.Stack {
     const resourceList = api.root.addResource("products");
     resourceList.addMethod(
       "GET",
-      new apigateway.LambdaIntegration(getProductsListFunction),
+      new apigateway.LambdaIntegration(getProductsListFunction)
     );
 
     const resourceById = resourceList.addResource("{id}");
     resourceById.addMethod(
       "GET",
-      new apigateway.LambdaIntegration(getProductByIdFunction),
+      new apigateway.LambdaIntegration(getProductByIdFunction)
     );
   }
 }

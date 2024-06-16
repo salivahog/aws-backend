@@ -1,11 +1,9 @@
-
-
 export interface IProduct {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-  }
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+}
 
 export const products: IProduct[] = [
   {
@@ -29,14 +27,14 @@ export const products: IProduct[] = [
 ];
 
 export const productResponse = (statusCode: number, body: any): any => {
-    return {
-      statusCode,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body)
-    };
+  return {
+    statusCode,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   };
+};

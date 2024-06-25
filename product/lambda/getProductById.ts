@@ -7,7 +7,6 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { productResponse } from "./utility";
 
-// Check for required environment variables
 const PRODUCTS_TABLE_NAME = process.env.PRODUCTS_TABLE_NAME;
 const STOCKS_TABLE_NAME = process.env.STOCKS_TABLE_NAME;
 if (!PRODUCTS_TABLE_NAME) {

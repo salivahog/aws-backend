@@ -8,7 +8,7 @@ import { DynamoDBDocumentClient, ScanCommand, BatchGetCommand } from "@aws-sdk/l
 
 import { productResponse } from "./utility";
 
-const client = new DynamoDBClient({ region: 'eu-central-1' });
+const client = new DynamoDBClient({ region: 'eu-west-1' });
 const dynamoDB = DynamoDBDocumentClient.from(client);
 
 const PRODUCTS_TABLE_NAME = process.env.PRODUCTS_TABLE_NAME;

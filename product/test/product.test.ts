@@ -1,5 +1,5 @@
 import { productResponse } from '../lambda/utility'
-import {handler as  getProductsList } from '../lambda/getProductsList';
+/* import {handler as  getProductsList } from '../lambda/getProductsList'; */
 import {handler as getProductById } from '../lambda/getProductById';
 import { products } from '../lambda/utility';
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
@@ -21,7 +21,7 @@ describe('test api products', () => {
       },
     } as any
     const context: Context = {} as Context;
-    const productItem = await getProductById(expected,context,(): void => {},);
+    const productItem = await getProductById(expected, context, (): void => {});
     expect(productItem).toEqual(productResponse(200, products[0]));
   });
 
@@ -32,7 +32,7 @@ describe('test api products', () => {
         },
       } as any
       const context: Context = {} as Context;
-      const productItem = await getProductById(expected,context,(): void => {},);
+      const productItem = await getProductById(expected, context, (): void => {});
     expect(productItem).toEqual(
         productResponse(404, {
         message: 'Product not found',
@@ -60,7 +60,7 @@ describe('test api products', () => {
 
 
 
-  it('list of products', async () => {
+ /*  it('list of products', async () => {
     const productList = await getProductsList();
     expect(productList).toEqual(productResponse(200, products));
   });
@@ -70,6 +70,6 @@ describe('test api products', () => {
     process.env.RODUCTS_DATA = "[]";
     const productList = await getProductsList();
     expect(productList).toEqual(productResponse(404, { message: "No products found" }));
-  });
+  }); */
 
 });

@@ -26,14 +26,14 @@ import { productResponse } from './utility';
           const { title, description, price, count } = JSON.parse(event.body || '{}');
   
           if (!title || !description || !price || !count) {
-            return productResponse(400,{message:'Need parrams: title, description, description, count'})
+            return productResponse(400,{message:'Need parrams: title, description, price, count'})
           }
   
           const id = randomUUID();
           const productItem = {
             TableName: PRODUCTS_TABLE_NAME,
             Item: {
-              id,
+              id:id,
               title,
               description,
               price,
@@ -43,7 +43,7 @@ import { productResponse } from './utility';
           const stockItem = {
             TableName: STOCKS_TABLE_NAME,
             Item: {
-              productId: id,
+              product_id: id,
               count,
             },
           };

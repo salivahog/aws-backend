@@ -9,10 +9,6 @@ import { productResponse } from "./utility";
 
 const PRODUCTS_TABLE_NAME = process.env.PRODUCTS_TABLE_NAME;
 const STOCKS_TABLE_NAME = process.env.STOCKS_TABLE_NAME;
-if (!PRODUCTS_TABLE_NAME) {
-  throw new Error("PRODUCTS_TABLE_NAME environment variable is not set");
-}
-
 const client = new DynamoDBClient({ region: 'eu-west-1' });
 const dynamoDB = DynamoDBDocumentClient.from(client);
 
@@ -35,7 +31,7 @@ export const handler: APIGatewayProxyHandler = async (
     }));
     const stockData = await dynamoDB.send(new GetCommand({
       TableName: STOCKS_TABLE_NAME, 
-      Key: { productId: id } 
+      Key: { product_id: id } 
     }));
     if (!productData.Item) {
       return productResponse(404, { message: "Product not found" });

@@ -10,55 +10,49 @@ export class ProjectAwsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const productTable = dynamodb.Table.fromTableName(this, 'TableProd', 'products');
-    const stocksTable = dynamodb.Table.fromTableName(this, 'TableStocks', 'stocks');
 
-
+    const lambdaGetProductsList = new lambda.Function(this, 'listProducts', {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      code: lambda.Code.fromAsset('lambda'),
+      handler: 'getProductsList.handler',
+      environment: {
+        PRODUCTS_TABLE_NAME: "products",
+        STOCKS_TABLE_NAME: "stocks",
+      },
+    });
   
-    const createProductFunction = new lambda.Function(this, 'createProductHandler', {
+    const createProductFunction = new lambda.Function(this, 'createProduct', {
       runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('lambda'),
       handler: 'createProduct.handler',
       environment: {
-        PRODUCTS_TABLE_NAME: productTable.tableName,
-        STOCKS_TABLE_NAME: stocksTable.tableName,
+        PRODUCTS_TABLE_NAME: "products",
+        STOCKS_TABLE_NAME: "stocks",
       },
     });
 
-    const LambdaGetProductById = new lambda.Function(this, 'GetProductById', {
-      runtime: lambda.Runtime.NODEJS_16_X,
+    const LambdaGetProductById = new lambda.Function(this, 'getProductById', {
+      runtime: lambda.Runtime.NODEJS_20_X,
       code: lambda.Code.fromAsset('lambda'),
-      handler: 'getProductsById.handler',
+      handler: 'getProductById.handler',
       environment: {
-        PRODUCTS_TABLE_NAME: 'products',
-        STOCKS_TABLE_NAME: 'stocks',
+        PRODUCTS_TABLE_NAME: "products",
+        STOCKS_TABLE_NAME: "stocks",
       },
     });
 
-    const lambdaGetProductsList = new lambda.Function(this, 'GetProductsList', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      code: lambda.Code.fromAsset('lambda'),
-      handler: 'getProductsList.handler',
-      environment: {
-        PRODUCTS_TABLE_NAME: 'products',
-        STOCKS_TABLE_NAME: 'stocks',
-      },
-    });
 
-    productTable.grantWriteData(createProductFunction);
-    stocksTable.grantWriteData(createProductFunction);
-    const policyStatement = new iam.PolicyStatement({
+    const policy = new iam.PolicyStatement({
       actions: [
-        'dynamodb:PutItem',
-        'dynamodb:GetItem',
         'dynamodb:Scan',
         'dynamodb:Query',
         'dynamodb:UpdateItem',
-        'dynamodb:DeleteItem',
+        'dynamodb:PutItem',
+        'dynamodb:GetItem',
       ],
       resources: [
-        'arn:aws:dynamodb:eu-west-1:134877641274:table/products',
-        'arn:aws:dynamodb:eu-west-1:134877641274:table/stocks',
+        'arn:aws:dynamodb:eu-west-1:891377023885:table/products',
+        'arn:aws:dynamodb:eu-west-1:891377023885:table/stocks',
       ],
     });
 
@@ -66,14 +60,14 @@ export class ProjectAwsStack extends cdk.Stack {
       description: 'products rsschool',
       corsPreflight: {
         allowHeaders: ['*'],
-        allowMethods: [apigateway.CorsHttpMethod.ANY],
         allowOrigins: ['*'],
+        allowMethods: [apigateway.CorsHttpMethod.GET, apigateway.CorsHttpMethod.POST, apigateway.CorsHttpMethod.OPTIONS],
       },
     });
 
-    lambdaGetProductsList.addToRolePolicy(policyStatement);
-    createProductFunction.addToRolePolicy(policyStatement);
-    LambdaGetProductById.addToRolePolicy(policyStatement);
+    lambdaGetProductsList.addToRolePolicy(policy);
+    createProductFunction.addToRolePolicy(policy);
+    LambdaGetProductById.addToRolePolicy(policy);
     
 
 

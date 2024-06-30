@@ -1,45 +1,47 @@
-import { productResponse } from '../lambda/utility'
+import { productResponse } from "../lambda/utility";
 /* import {handler as  getProductsList } from '../lambda/getProductsList'; */
-import {handler as getProductById } from '../lambda/getProductById';
-import { products } from '../lambda/utility';
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { handler as getProductById } from "../lambda/getProductById";
+import { products } from "../lambda/utility";
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Context,
+} from "aws-lambda";
 
+describe("test api products", () => {
+  beforeEach((): void => {
+    process.env.PRODUCTS_DATA = JSON.stringify(products);
+  });
 
-describe('test api products', () => {
-    beforeEach((): void => {
-        process.env.PRODUCTS_DATA = JSON.stringify(products);
-      });
-    
-      afterEach((): void => {
-        delete process.env.PRODUCTS_DATA;
-      });
+  afterEach((): void => {
+    delete process.env.PRODUCTS_DATA;
+  });
 
-  it('return porduct id', async () => {
+  it("return porduct id", async () => {
     const expected: APIGatewayProxyEvent = {
       pathParameters: {
         id: "1",
       },
-    } as any
+    } as any;
     const context: Context = {} as Context;
     const productItem = await getProductById(expected, context, (): void => {});
     expect(productItem).toEqual(productResponse(200, products[0]));
   });
 
-  it('should return error Product not found', async () => {
+  it("should return error Product not found", async () => {
     const expected: APIGatewayProxyEvent = {
-        pathParameters: {
-          id: '5',
-        },
-      } as any
-      const context: Context = {} as Context;
-      const productItem = await getProductById(expected, context, (): void => {});
+      pathParameters: {
+        id: "5",
+      },
+    } as any;
+    const context: Context = {} as Context;
+    const productItem = await getProductById(expected, context, (): void => {});
     expect(productItem).toEqual(
-        productResponse(404, {
-        message: 'Product not found',
+      productResponse(404, {
+        message: "Product not found",
       })
     );
   });
-
 
   it("400 need id", async (): Promise<void> => {
     const event: APIGatewayProxyEvent = {} as APIGatewayProxyEvent;
@@ -47,20 +49,16 @@ describe('test api products', () => {
     const result = (await getProductById(
       event,
       context,
-      (): void => {},
+      (): void => {}
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toBe(400);
     expect(result.body).toBe(
-      JSON.stringify({ message: "Product ID is required" }),
+      JSON.stringify({ message: "Product ID is required" })
     );
   });
 
-
-
-
-
- /*  it('list of products', async () => {
+  /*  it('list of products', async () => {
     const productList = await getProductsList();
     expect(productList).toEqual(productResponse(200, products));
   });
@@ -71,5 +69,4 @@ describe('test api products', () => {
     const productList = await getProductsList();
     expect(productList).toEqual(productResponse(404, { message: "No products found" }));
   }); */
-
 });

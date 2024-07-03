@@ -1,0 +1,67 @@
+---
+swagger: "2.0"
+info:
+  description: "Ttt"
+  version: "2024-06-16T18:17:52Z"
+  title: "api Products"
+host: "ad1bki7ez2.execute-api.eu-west-1.amazonaws.com"
+basePath: "/prod"
+schemes:
+- "https"
+paths:
+  /:
+    options:
+      consumes:
+      - "application/json"
+      responses:
+        "204":
+          description: "204 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+  /products:
+    get:
+      responses: {}
+    options:
+      consumes:
+      - "application/json"
+      responses:
+        "204":
+          description: "204 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+  /products/{id}:
+    get:
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses: {}
+    options:
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        "204":
+          description: "204 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
